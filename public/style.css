@@ -3,28 +3,8 @@ body {
     padding: 20px;
 }
 
-.tool {
-    display: none;
-}
-
-#calc-display {
+#transcript {
     width: 100%;
-    font-size: 1.5rem;
-    padding: 10px;
-    margin-bottom: 10px;
-    text-align: right;
-    box-sizing: border-box;
+    margin-top: 20px;
+    min-height: 200px;
 }
-
-#calc-buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-}
-
-
-.timer-input input {
-    width: 60px;
-    text-align: center;
-}
-

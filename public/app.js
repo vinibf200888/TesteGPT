@@ -1,107 +1,51 @@
-function showTool(id) {
-    document.getElementById('menu').style.display = 'none';
-    document.querySelectorAll('.tool').forEach(t => t.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-}
+const startBtn = document.getElementById('start-btn');
+const transcriptArea = document.getElementById('transcript');
 
-function showMenu() {
-    document.querySelectorAll('.tool').forEach(t => t.style.display = 'none');
-    document.getElementById('menu').style.display = 'block';
-}
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-// Calculator
-let calcExpr = '';
-function calcInput(val) {
-    calcExpr += val;
-    document.getElementById('calc-display').value = calcExpr;
-}
+if (SpeechRecognition) {
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'pt-BR';
+  recognition.continuous = true;
+  recognition.interimResults = true;
 
-function calculate() {
-    try {
-        calcExpr = eval(calcExpr).toString();
-    } catch {
-        calcExpr = '';
+  let finalTranscript = '';
+
+  recognition.onresult = (event) => {
+    let interim = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const text = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        finalTranscript += text + ' ';
+      } else {
+        interim += text;
+      }
     }
-    document.getElementById('calc-display').value = calcExpr;
-}
+    transcriptArea.value = finalTranscript + interim;
+  };
 
-function calcClear() {
-    calcExpr = '';
-    document.getElementById('calc-display').value = '';
-}
+  recognition.onerror = (event) => {
+    console.error('Speech recognition error', event);
+  };
 
-// Timer
-let timerInterval = null;
-let timerRemaining = 0;
-
-function startTimer() {
-    if (timerInterval) return;
-    if (timerRemaining === 0) {
-        const mins = parseInt(document.getElementById('timer-minutes').value) || 0;
-        const secs = parseInt(document.getElementById('timer-seconds').value) || 0;
-        timerRemaining = mins * 60 + secs;
+  startBtn.addEventListener('click', () => {
+    if (startBtn.dataset.listening === 'true') {
+      recognition.stop();
+      startBtn.dataset.listening = 'false';
+      startBtn.textContent = 'Iniciar Microfone';
+    } else {
+      recognition.start();
+      startBtn.dataset.listening = 'true';
+      startBtn.textContent = 'Parar';
     }
-    if (timerRemaining <= 0) return;
-    updateTimerDisplay();
-    timerInterval = setInterval(() => {
-        timerRemaining--;
-        updateTimerDisplay();
-        if (timerRemaining <= 0) {
-            stopTimer();
-        }
-    }, 1000);
-}
+  });
 
-function stopTimer() {
-    if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
+  recognition.onend = () => {
+    if (startBtn.dataset.listening === 'true') {
+      recognition.start();
     }
-}
-
-function resetTimer() {
-    stopTimer();
-    timerRemaining = 0;
-    updateTimerDisplay();
-}
-
-function updateTimerDisplay() {
-    const h = Math.floor(timerRemaining / 3600);
-    const m = Math.floor((timerRemaining % 3600) / 60);
-    const s = timerRemaining % 60;
-    document.getElementById('timer-display').textContent =
-        `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-}
-
-// Stopwatch
-let stopwatchInterval = null;
-let stopwatchElapsed = 0;
-
-function startStopwatch() {
-    if (stopwatchInterval) return;
-    stopwatchInterval = setInterval(() => {
-        stopwatchElapsed++;
-        updateStopwatchDisplay();
-    }, 1000);
-}
-
-function stopStopwatch() {
-    if (stopwatchInterval) {
-        clearInterval(stopwatchInterval);
-        stopwatchInterval = null;
-    }
-}
-
-function resetStopwatch() {
-    stopStopwatch();
-    stopwatchElapsed = 0;
-    updateStopwatchDisplay();
-}
-
-function updateStopwatchDisplay() {
-    const h = Math.floor(stopwatchElapsed / 3600);
-    const m = Math.floor((stopwatchElapsed % 3600) / 60);
-    const s = stopwatchElapsed % 60;
-    document.getElementById('stopwatch-display').textContent =
-        `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+  };
+} else {
+  startBtn.disabled = true;
+  startBtn.textContent = 'Reconhecimento n\u00e3o suportado';
 }
