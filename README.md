@@ -1,11 +1,11 @@
 # TesteGPT
 
-Este repositório contém um exemplo de calculadora com interface gráfica criada em Python usando Tkinter.
+Este repositório contém um pequeno aplicativo em Python usando Tkinter. Agora ele oferece duas ferramentas: uma calculadora e um timer.
 
 ## Como executar
 
 ```bash
-python3 calculator.py
+python3 app.py
 ```
 
-A aplicação abrirá uma janela semelhante à calculadora do Windows, permitindo realizar operações básicas como soma, subtração, multiplicação e divisão.
+Ao executar o comando acima, uma tela inicial será exibida com duas opções. Escolha "Calculadora" para abrir a calculadora ou "Timer" para abrir o cronômetro simples.
