@@ -10,11 +10,18 @@ class MainMenu(tk.Tk):
         super().__init__()
         self.title("Menu")
         self.resizable(False, False)
-        self.configure(padx=20, pady=20)
+        self.configure(padx=20, pady=20, bg='white')
 
-        tk.Button(self, text="Calculadora", width=15, command=self.open_calculator, font=('Arial', 14)).pack(pady=10)
-        tk.Button(self, text="Timer", width=15, command=self.open_timer, font=('Arial', 14)).pack(pady=10)
-        tk.Button(self, text="Cron\u00f4metro", width=15, command=self.open_stopwatch, font=('Arial', 14)).pack(pady=10)
+        btn_opts = {
+            "width": 15,
+            "font": ("Arial", 14),
+            "bg": "#d0e7ff",
+            "activebackground": "#a0cfff",
+        }
+
+        tk.Button(self, text="Calculadora", command=self.open_calculator, **btn_opts).pack(pady=10)
+        tk.Button(self, text="Timer", command=self.open_timer, **btn_opts).pack(pady=10)
+        tk.Button(self, text="Cronômetro", command=self.open_stopwatch, **btn_opts).pack(pady=10)
 
     def open_calculator(self):
         Calculator(self)
