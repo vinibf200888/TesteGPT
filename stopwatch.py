@@ -8,33 +8,20 @@ class Stopwatch(tk.Toplevel):
         super().__init__(master)
         self.title("Cron\u00f4metro")
         self.resizable(False, False)
-        self.configure(bg="white")
 
         self.elapsed = 0
         self.running = False
         self.after_id = None
 
-        self.label = tk.Label(
-            self,
-            text="00:00:00",
-            font=('Arial', 40),
-            bg="white",
-            fg="#003366",
-        )
+        self.label = tk.Label(self, text="00:00:00", font=('Arial', 40))
         self.label.pack(padx=20, pady=20)
 
-        control_frame = tk.Frame(self, bg="white")
+        control_frame = tk.Frame(self)
         control_frame.pack(pady=10)
 
-        btn_opts = {
-            "width": 8,
-            "bg": "#d0e7ff",
-            "activebackground": "#a0cfff",
-        }
-
-        tk.Button(control_frame, text="Iniciar", command=self.start, **btn_opts).pack(side=tk.LEFT, padx=5)
-        tk.Button(control_frame, text="Parar", command=self.stop, **btn_opts).pack(side=tk.LEFT, padx=5)
-        tk.Button(control_frame, text="Reset", command=self.reset, **btn_opts).pack(side=tk.LEFT, padx=5)
+        tk.Button(control_frame, text="Iniciar", width=8, command=self.start).pack(side=tk.LEFT, padx=5)
+        tk.Button(control_frame, text="Parar", width=8, command=self.stop).pack(side=tk.LEFT, padx=5)
+        tk.Button(control_frame, text="Reset", width=8, command=self.reset).pack(side=tk.LEFT, padx=5)
 
     def _update(self):
         if self.running:
