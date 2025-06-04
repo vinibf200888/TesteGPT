@@ -49,3 +49,48 @@ if (SpeechRecognition) {
   startBtn.disabled = true;
   startBtn.textContent = 'Reconhecimento n\u00e3o suportado';
 }
+
+// Video transcription
+const videoInput = document.getElementById('video-input');
+const videoPlayer = document.getElementById('video-player');
+const transcribeBtn = document.getElementById('transcribe-btn');
+const videoTranscript = document.getElementById('video-transcript');
+let selectedVideo = null;
+
+videoInput?.addEventListener('change', () => {
+  const file = videoInput.files[0];
+  if (file) {
+    selectedVideo = file;
+    videoPlayer.src = URL.createObjectURL(file);
+    videoPlayer.load();
+  }
+});
+
+transcribeBtn?.addEventListener('click', async () => {
+  if (!selectedVideo) return;
+  const formData = new FormData();
+  formData.append('video', selectedVideo);
+  transcribeBtn.disabled = true;
+  transcribeBtn.textContent = 'Transcrevendo...';
+  try {
+    const res = await fetch('/api/transcribe', {
+      method: 'POST',
+      body: formData
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.words) {
+        videoTranscript.value = data.words.map(w => w.text).join(' ');
+      } else {
+        videoTranscript.value = JSON.stringify(data);
+      }
+    } else {
+      videoTranscript.value = 'Erro ao transcrever';
+    }
+  } catch (err) {
+    console.error(err);
+    videoTranscript.value = 'Erro ao transcrever';
+  }
+  transcribeBtn.disabled = false;
+  transcribeBtn.textContent = 'Transcrever Vídeo';
+});
