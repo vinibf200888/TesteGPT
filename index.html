@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ferramentas Web</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="menu">
+    <h1>Menu</h1>
+    <button onclick="showTool('calculator')">Calculadora</button>
+    <button onclick="showTool('timer')">Timer</button>
+    <button onclick="showTool('stopwatch')">Cronômetro</button>
+</div>
+
+<div id="calculator" class="tool">
+    <button class="back" onclick="showMenu()">Voltar</button>
+    <input type="text" id="calc-display" readonly>
+    <div id="calc-buttons">
+        <button onclick="calcInput('7')">7</button>
+        <button onclick="calcInput('8')">8</button>
+        <button onclick="calcInput('9')">9</button>
+        <button onclick="calcInput('/')">/</button>
+        <button onclick="calcInput('4')">4</button>
+        <button onclick="calcInput('5')">5</button>
+        <button onclick="calcInput('6')">6</button>
+        <button onclick="calcInput('*')">*</button>
+        <button onclick="calcInput('1')">1</button>
+        <button onclick="calcInput('2')">2</button>
+        <button onclick="calcInput('3')">3</button>
+        <button onclick="calcInput('-')">-</button>
+        <button onclick="calcInput('0')">0</button>
+        <button onclick="calcInput('.')">.</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="calcInput('+')">+</button>
+        <button onclick="calcClear()" style="grid-column: span 4;">C</button>
+    </div>
+</div>
+
+<div id="timer" class="tool">
+    <button class="back" onclick="showMenu()">Voltar</button>
+    <div id="timer-display">00:00:00</div>
+    <div class="timer-input">
+        <input type="number" id="timer-minutes" min="0" value="0"> :
+        <input type="number" id="timer-seconds" min="0" value="0">
+    </div>
+    <button onclick="startTimer()">Iniciar</button>
+    <button onclick="stopTimer()">Parar</button>
+    <button onclick="resetTimer()">Reset</button>
+</div>
+
+<div id="stopwatch" class="tool">
+    <button class="back" onclick="showMenu()">Voltar</button>
+    <div id="stopwatch-display">00:00:00</div>
+    <button onclick="startStopwatch()">Iniciar</button>
+    <button onclick="stopStopwatch()">Parar</button>
+    <button onclick="resetStopwatch()">Reset</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
