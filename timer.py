@@ -8,30 +8,43 @@ class Timer(tk.Toplevel):
         super().__init__(master)
         self.title("Timer")
         self.resizable(False, False)
+        self.configure(bg="white")
 
         self.remaining = 0
         self.running = False
         self.after_id = None
 
-        self.label = tk.Label(self, text="00:00:00", font=('Arial', 40))
+        self.label = tk.Label(
+            self,
+            text="00:00:00",
+            font=('Arial', 40),
+            bg="white",
+            fg="#003366",
+        )
         self.label.pack(padx=20, pady=20)
 
-        input_frame = tk.Frame(self)
+        input_frame = tk.Frame(self, bg="white")
         input_frame.pack(pady=5)
 
         self.minutes_var = tk.StringVar(value="0")
         self.seconds_var = tk.StringVar(value="0")
 
-        tk.Entry(input_frame, textvariable=self.minutes_var, width=3, justify='center').pack(side=tk.LEFT)
-        tk.Label(input_frame, text=":").pack(side=tk.LEFT)
-        tk.Entry(input_frame, textvariable=self.seconds_var, width=3, justify='center').pack(side=tk.LEFT)
+        tk.Entry(input_frame, textvariable=self.minutes_var, width=3, justify='center', bg='white').pack(side=tk.LEFT)
+        tk.Label(input_frame, text=":", bg="white").pack(side=tk.LEFT)
+        tk.Entry(input_frame, textvariable=self.seconds_var, width=3, justify='center', bg='white').pack(side=tk.LEFT)
 
-        control_frame = tk.Frame(self)
+        control_frame = tk.Frame(self, bg="white")
         control_frame.pack(pady=10)
 
-        tk.Button(control_frame, text="Iniciar", width=8, command=self.start).pack(side=tk.LEFT, padx=5)
-        tk.Button(control_frame, text="Parar", width=8, command=self.stop).pack(side=tk.LEFT, padx=5)
-        tk.Button(control_frame, text="Reset", width=8, command=self.reset).pack(side=tk.LEFT, padx=5)
+        btn_opts = {
+            "width": 8,
+            "bg": "#d0e7ff",
+            "activebackground": "#a0cfff",
+        }
+
+        tk.Button(control_frame, text="Iniciar", command=self.start, **btn_opts).pack(side=tk.LEFT, padx=5)
+        tk.Button(control_frame, text="Parar", command=self.stop, **btn_opts).pack(side=tk.LEFT, padx=5)
+        tk.Button(control_frame, text="Reset", command=self.reset, **btn_opts).pack(side=tk.LEFT, padx=5)
 
     def _update(self):
         if self.running and self.remaining > 0:

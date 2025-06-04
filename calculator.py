@@ -6,12 +6,19 @@ class Calculator(tk.Toplevel):
     def __init__(self, master=None):
         super().__init__(master)
         self.title("Calculadora")
-        self.configure(bg='lightgray')
+        self.configure(bg='white')
         self.resizable(False, False)
 
         self.expression = ""
 
-        self.entry = tk.Entry(self, font=('Arial', 20), bd=5, relief=tk.RIDGE, justify='right')
+        self.entry = tk.Entry(
+            self,
+            font=('Arial', 20),
+            bd=5,
+            relief=tk.RIDGE,
+            justify='right',
+            bg='white',
+        )
         self.entry.grid(row=0, column=0, columnspan=4, padx=10, pady=10, ipady=10)
 
         buttons = [
@@ -21,24 +28,28 @@ class Calculator(tk.Toplevel):
             ('0', 4, 0), ('.', 4, 1), ('=', 4, 2), ('+', 4, 3),
         ]
 
+        btn_opts = {
+            "width": 5,
+            "height": 2,
+            "font": ('Arial', 18),
+            "bg": '#d0e7ff',
+            "activebackground": '#a0cfff',
+        }
+
         for (text, row, column) in buttons:
             action = partial(self.on_button_click, text)
             tk.Button(
                 self,
                 text=text,
-                width=5,
-                height=2,
-                font=('Arial', 18),
-                command=action
+                command=action,
+                **btn_opts,
             ).grid(row=row, column=column, padx=5, pady=5)
 
         tk.Button(
             self,
             text='C',
-            width=5,
-            height=2,
-            font=('Arial', 18),
-            command=self.clear
+            command=self.clear,
+            **btn_opts,
         ).grid(row=5, column=0, columnspan=4, padx=5, pady=5, sticky='we')
 
     def on_button_click(self, char):
