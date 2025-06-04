@@ -1,6 +1,6 @@
 # TesteGPT
 
-Este repositório contém um pequeno aplicativo em Python usando Tkinter. Agora ele oferece duas ferramentas: uma calculadora e um timer.
+Este repositório contém um pequeno aplicativo em Python usando Tkinter. Agora ele oferece três ferramentas: uma calculadora, um timer (contagem regressiva) e um cronômetro.
 
 ## Como executar
 
@@ -8,4 +8,4 @@ Este repositório contém um pequeno aplicativo em Python usando Tkinter. Agora 
 python3 app.py
 ```
 
-Ao executar o comando acima, uma tela inicial será exibida com duas opções. Escolha "Calculadora" para abrir a calculadora ou "Timer" para abrir o cronômetro simples.
+Ao executar o comando acima, uma tela inicial será exibida com três opções. Escolha "Calculadora" para abrir a calculadora, "Timer" para abrir o temporizador regressivo ou "Cronômetro" para iniciar o cronômetro simples.
