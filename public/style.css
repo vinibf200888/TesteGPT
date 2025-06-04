@@ -1,13 +1,6 @@
 body {
-    font-family: Arial, sans-serif;
     text-align: center;
     padding: 20px;
-}
-
-button {
-    font-size: 1rem;
-    padding: 10px 20px;
-    margin: 5px;
 }
 
 .tool {
@@ -29,14 +22,9 @@ button {
     gap: 5px;
 }
 
+
 .timer-input input {
-    width: 50px;
+    width: 60px;
     text-align: center;
 }
 
-@media (min-width: 600px) {
-    #calc-buttons button {
-        padding: 15px;
-        font-size: 1.2rem;
-    }
-}

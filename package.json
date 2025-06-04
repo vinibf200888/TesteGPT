@@ -1,0 +1,16 @@
+{
+  "name": "testegpt",
+  "version": "1.0.0",
+  "description": "Este reposit\\u00f3rio agora traz uma vers\\u00e3o totalmente web das tr\\u00eas ferramentas originais: calculadora, timer e cron\\u00f4metro. Tudo foi reescrito em HTML, CSS e JavaScript para ser executado diretamente no navegador.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
