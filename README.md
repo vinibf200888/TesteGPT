@@ -1,6 +1,6 @@
-# Reconhecimento de Fala Web
+# Transcri\u00e7\u00e3o de V\u00eddeos
 
-Este projeto utiliza Node.js e Express para hospedar uma p\u00e1gina simples que demonstra o reconhecimento de fala do navegador. Ao clicar em **Iniciar Microfone**, o navegador solicita acesso ao microfone e todo o texto captado \u00e9 transcrito em tempo real em uma caixa de texto.
+Este projeto usa Node.js e Express para disponibilizar uma p\u00e1gina onde \u00e9 poss\u00edvel enviar um v\u00eddeo e obter sua transcri\u00e7\u00e3o. O bot\u00e3o **Iniciar Transcri\u00e7\u00e3o** envia o v\u00eddeo selecionado ao servidor e o texto resultante \u00e9 exibido ap\u00f3s o processamento.
 
 ## Como usar
 
@@ -11,7 +11,7 @@ npm install
 npm start
 ```
 
-Abra `http://localhost:3000` em um navegador compat\u00edvel (Chrome ou Edge). Permita o acesso ao microfone e comece a falar para ver a transcri\u00e7\u00e3o aparecer.
+Abra `http://localhost:3000` em um navegador compat\u00edvel (Chrome ou Edge). Selecione um arquivo de v\u00eddeo, clique em **Iniciar Transcri\u00e7\u00e3o** e aguarde o resultado aparecer na tela.
 
 ## Transcri\u00e7\u00e3o de v\u00eddeos
 
