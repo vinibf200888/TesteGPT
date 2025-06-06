@@ -8,6 +8,19 @@ const transcribeBtn = document.getElementById('transcribe-btn');
 const videoTranscript = document.getElementById('video-transcript');
 let selectedVideo = null;
 
+// YouTube transcription
+const youtubeUrlInput = document.getElementById('youtube-url');
+const loadYoutubeBtn = document.getElementById('load-youtube-btn');
+const transcribeYoutubeBtn = document.getElementById('transcribe-youtube-btn');
+const youtubeContainer = document.getElementById('youtube-container');
+const youtubeTranscript = document.getElementById('youtube-transcript');
+
+function extractVideoId(url) {
+  const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([A-Za-z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+
 startBtn?.addEventListener('click', async () => {
   if (!selectedVideo) return;
   const formData = new FormData();
@@ -73,4 +86,55 @@ transcribeBtn?.addEventListener('click', async () => {
   }
   transcribeBtn.disabled = false;
   transcribeBtn.textContent = 'Transcrever Vídeo';
+});
+
+loadYoutubeBtn?.addEventListener('click', () => {
+  const url = youtubeUrlInput.value.trim();
+  const id = extractVideoId(url);
+  if (!id) {
+    alert('Link inválido');
+    return;
+  }
+  youtubeContainer.innerHTML = `<iframe id="youtube-player" src="https://www.youtube.com/embed/${id}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  transcribeYoutubeBtn.disabled = false;
+});
+
+transcribeYoutubeBtn?.addEventListener('click', async () => {
+  youtubeTranscript.value = '';
+  try {
+    const stream = await navigator.mediaDevices.getDisplayMedia({ audio: true, video: false });
+    const recorder = new MediaRecorder(stream);
+    const chunks = [];
+    transcribeYoutubeBtn.disabled = true;
+    transcribeYoutubeBtn.textContent = 'Capturando...';
+    recorder.ondataavailable = e => chunks.push(e.data);
+    recorder.start();
+    setTimeout(() => recorder.stop(), 10000);
+    recorder.onstop = async () => {
+      transcribeYoutubeBtn.textContent = 'Transcrevendo...';
+      const blob = new Blob(chunks, { type: 'audio/webm' });
+      const formData = new FormData();
+      formData.append('video', blob, 'audio.webm');
+      try {
+        const res = await fetch('/api/transcribe', { method: 'POST', body: formData });
+        if (res.ok) {
+          const data = await res.json();
+          youtubeTranscript.value = data.words ? data.words.map(w => w.text).join(' ') : JSON.stringify(data);
+        } else {
+          youtubeTranscript.value = 'Erro ao transcrever';
+        }
+      } catch (err) {
+        console.error(err);
+        youtubeTranscript.value = 'Erro ao transcrever';
+      }
+      transcribeYoutubeBtn.disabled = false;
+      transcribeYoutubeBtn.textContent = 'Transcrever YouTube';
+      stream.getTracks().forEach(t => t.stop());
+    };
+  } catch (err) {
+    console.error(err);
+    youtubeTranscript.value = 'Erro ao capturar áudio';
+    transcribeYoutubeBtn.disabled = false;
+    transcribeYoutubeBtn.textContent = 'Transcrever YouTube';
+  }
 });

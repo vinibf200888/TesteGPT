@@ -8,3 +8,8 @@ body {
     margin-top: 20px;
     min-height: 200px;
 }
+
+#youtube-container iframe {
+    width: 100%;
+    height: 315px;
+}
