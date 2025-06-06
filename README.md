@@ -13,6 +13,10 @@ npm start
 
 Abra `http://localhost:3000` em um navegador compatível (Chrome ou Edge), permita o acesso ao microfone e comece a falar para ver a transcrição.
 
+## Aprimorar transcrição de músicas
+
+Para obter resultados melhores ao transcrever canções, defina a variável de ambiente `OPENAI_API_KEY` com sua chave da OpenAI. Quando essa variável estiver presente o servidor usará o modelo `whisper-1` da OpenAI para analisar o áudio enviado e gerar a transcrição palavra por palavra, mesmo em trechos com instrumentais.
+
 ## Transcrição de vídeos
 
 Também é possível enviar um arquivo de vídeo para que o servidor extraia o áudio e tente transcrever o conteúdo. Basta selecionar o vídeo no campo **Transcrever Vídeo** e clicar no botão correspondente. O resultado é exibido em uma área de texto abaixo do player.

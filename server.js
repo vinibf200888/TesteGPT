@@ -3,6 +3,9 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const transcribe = require('pocketsphinx-stt');
+const OpenAI = require('openai');
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
 fs.mkdirSync(path.join(__dirname, 'uploads'), { recursive: true });
@@ -22,7 +25,29 @@ app.post('/api/transcribe', upload.single('video'), async (req, res) => {
   }
 
   try {
-    const result = await transcribe(req.file.path);
+    let result;
+    if (process.env.OPENAI_API_KEY) {
+      const resp = await openai.audio.transcriptions.create({
+        file: fs.createReadStream(req.file.path),
+        model: 'whisper-1',
+        response_format: 'verbose_json',
+        language: 'pt',
+        timestamp_granularities: ['word']
+      });
+      const words = [];
+      if (resp.segments) {
+        resp.segments.forEach(seg => {
+          if (Array.isArray(seg.words)) {
+            seg.words.forEach(w => {
+              words.push({ text: w.word, start: w.start, end: w.end });
+            });
+          }
+        });
+      }
+      result = { words, text: resp.text };
+    } else {
+      result = await transcribe(req.file.path);
+    }
     fs.unlink(req.file.path, () => {});
     res.json(result);
   } catch (err) {
