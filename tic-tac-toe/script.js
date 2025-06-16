@@ -1,73 +1,165 @@
-const boardElement = document.getElementById('game');
-const statusElement = document.getElementById('status');
-const resetButton = document.getElementById('reset');
+const boardEl = document.getElementById('game');
+const statusEl = document.getElementById('status');
+const qWinsEl = document.getElementById('q-wins');
+const rWinsEl = document.getElementById('random-wins');
+const drawsEl = document.getElementById('draws');
+const startBtn = document.getElementById('start-stop');
+const ctx = document.getElementById('chart').getContext('2d');
 
 let board;
 let currentPlayer;
 let gameOver;
+let running = false;
+let qWins = 0;
+let rWins = 0;
+let draws = 0;
+const qTable = {};
+const epsilon = 0.2;
+const alpha = 0.3;
+const gamma = 0.9;
 
-function init() {
-  board = Array(9).fill(null);
-  currentPlayer = 'X';
-  gameOver = false;
-  statusElement.textContent = `Vez de ${currentPlayer}`;
-  boardElement.innerHTML = '';
-  for (let i = 0; i < 9; i++) {
-    const cell = document.createElement('div');
-    cell.classList.add('cell');
-    cell.dataset.index = i;
-    cell.addEventListener('click', handleMove);
-    boardElement.appendChild(cell);
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [
+      { label: 'Robo ML', data: [], borderColor: 'blue', fill: false },
+      { label: 'Robo Aleatório', data: [], borderColor: 'red', fill: false }
+    ]
+  },
+  options: {
+    animation: false,
+    scales: { y: { beginAtZero: true } }
   }
+});
+
+function getState(b) {
+  return b.map(v => v || '-').join('');
 }
 
-function handleMove(e) {
-  const idx = e.target.dataset.index;
-  if (gameOver || board[idx] || currentPlayer !== 'X') return;
-
-  makeMove(idx, 'X', e.target);
-  if (!gameOver) {
-    setTimeout(computerMove, 300);
-  }
+function emptyIndices(b) {
+  const res = [];
+  for (let i = 0; i < b.length; i++) if (!b[i]) res.push(i);
+  return res;
 }
 
-function computerMove() {
-  const empty = board.map((v, i) => v ? null : i).filter(i => i !== null);
-  if (empty.length === 0 || gameOver) return;
-  const idx = empty[Math.floor(Math.random() * empty.length)];
-  const cell = boardElement.querySelector(`.cell[data-index='${idx}']`);
-  makeMove(idx, 'O', cell);
+function randomMove(b) {
+  const empty = emptyIndices(b);
+  return empty[Math.floor(Math.random() * empty.length)];
 }
 
-function makeMove(idx, player, cell) {
+function chooseQMove(b) {
+  const state = getState(b);
+  if (!qTable[state]) qTable[state] = Array(9).fill(0);
+  if (Math.random() < epsilon) return randomMove(b);
+  const moves = emptyIndices(b);
+  let best = moves[0];
+  let bestVal = -Infinity;
+  moves.forEach(i => {
+    const val = qTable[state][i] || 0;
+    if (val > bestVal) { bestVal = val; best = i; }
+  });
+  return best;
+}
+
+function makeMove(idx, player) {
   board[idx] = player;
-  cell.textContent = player;
-  if (checkWin()) {
-    statusElement.textContent = `Jogador ${player} venceu!`;
-    gameOver = true;
-    return;
-  }
-  if (board.every(Boolean)) {
-    statusElement.textContent = 'Empate!';
-    gameOver = true;
-    return;
-  }
-  currentPlayer = player === 'X' ? 'O' : 'X';
-  statusElement.textContent = `Vez de ${currentPlayer}`;
 }
 
-function checkWin() {
-  const wins = [
+function checkWin(player) {
+  const c = [
     [0,1,2],[3,4,5],[6,7,8],
     [0,3,6],[1,4,7],[2,5,8],
     [0,4,8],[2,4,6]
   ];
-  return wins.some(combo => {
-    const [a,b,c] = combo;
-    return board[a] && board[a] === board[b] && board[a] === board[c];
-  });
+  return c.some(combo => combo.every(i => board[i] === player));
 }
 
-resetButton.addEventListener('click', init);
+function renderBoard() {
+  boardEl.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.textContent = board[i] || '';
+    boardEl.appendChild(cell);
+  }
+}
 
-init();
+function updateScore(result) {
+  if (result === 'q') qWins++;
+  else if (result === 'r') rWins++;
+  else draws++;
+  qWinsEl.textContent = qWins;
+  rWinsEl.textContent = rWins;
+  drawsEl.textContent = draws;
+  chart.data.labels.push(chart.data.labels.length + 1);
+  chart.data.datasets[0].data.push(qWins);
+  chart.data.datasets[1].data.push(rWins);
+  chart.update();
+}
+
+function updateQ(states, reward) {
+  for (let i = states.length - 1; i >= 0; i--) {
+    const { state, action } = states[i];
+    if (!qTable[state]) qTable[state] = Array(9).fill(0);
+    const nextMax = i < states.length - 1 ? Math.max(...qTable[states[i+1].state]) : 0;
+    qTable[state][action] += alpha * (reward + gamma * nextMax - qTable[state][action]);
+    reward *= gamma;
+  }
+}
+
+function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+async function playGame() {
+  board = Array(9).fill(null);
+  currentPlayer = 'O';
+  gameOver = false;
+  const qStates = [];
+  renderBoard();
+  while (!gameOver) {
+    let idx;
+    if (currentPlayer === 'O') {
+      const state = getState(board);
+      idx = chooseQMove(board);
+      qStates.push({ state, action: idx });
+      makeMove(idx, 'O');
+    } else {
+      idx = randomMove(board);
+      makeMove(idx, 'X');
+    }
+    renderBoard();
+    if (checkWin(currentPlayer)) {
+      gameOver = true;
+      break;
+    }
+    if (board.every(Boolean)) {
+      gameOver = true;
+      currentPlayer = null;
+      break;
+    }
+    currentPlayer = currentPlayer === 'O' ? 'X' : 'O';
+    await delay(20);
+  }
+  let result;
+  if (checkWin('O')) result = 'q';
+  else if (checkWin('X')) result = 'r';
+  else result = 'd';
+  const reward = result === 'q' ? 1 : result === 'r' ? -1 : 0.5;
+  updateQ(qStates, reward);
+  updateScore(result);
+  await delay(50);
+}
+
+async function trainingLoop() {
+  while (running) {
+    await playGame();
+  }
+}
+
+startBtn.addEventListener('click', () => {
+  running = !running;
+  startBtn.textContent = running ? 'Pausar' : 'Iniciar Treino';
+  if (running) trainingLoop();
+});
+
+renderBoard();

@@ -27,3 +27,12 @@ body {
   font-weight: bold;
   margin-bottom: 10px;
 }
+
+#scoreboard {
+  margin-bottom: 20px;
+}
+
+#chart {
+  max-width: 600px;
+  margin: 0 auto;
+}
