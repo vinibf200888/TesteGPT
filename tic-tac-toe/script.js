@@ -18,6 +18,27 @@ const tabPlay = document.getElementById('tab-play');
 const tabTrain = document.getElementById('tab-train');
 const playSection = document.getElementById('play-section');
 const trainSection = document.getElementById('train-section');
+const toggleSoundBtn = document.getElementById('toggle-sound');
+
+let soundEnabled = true;
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioCtx();
+
+function playTone(freq, duration) {
+  if (!soundEnabled) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.frequency.value = freq;
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration / 1000);
+}
+
+function playWin() { playTone(880, 200); }
+function playLose() { playTone(220, 200); }
+function playDraw() { playTone(440, 200); }
+function playClick() { playTone(660, 100); }
 
 let board;
 let currentPlayer;
@@ -276,11 +297,13 @@ function startHumanGame() {
 
 async function handleHumanMove(idx) {
   if (gameOver || board[idx]) return;
+  playClick();
   makeMove(idx, 'X');
   renderBoard(handleHumanMove);
   if (checkWin('X')) {
     updateHumanScore('player');
     statusEl.textContent = 'Voc\u00ea venceu!';
+    playWin();
     gameOver = true;
     playAgainBtn.style.display = 'inline-block';
     aiStartsNext = !aiStartsNext;
@@ -289,6 +312,7 @@ async function handleHumanMove(idx) {
   if (board.every(Boolean)) {
     updateHumanScore('draw');
     statusEl.textContent = 'Empate';
+    playDraw();
     gameOver = true;
     playAgainBtn.style.display = 'inline-block';
     aiStartsNext = !aiStartsNext;
@@ -302,6 +326,7 @@ async function handleHumanMove(idx) {
   if (checkWin('O')) {
     updateHumanScore('ai');
     statusEl.textContent = 'Rob\u00f4 venceu!';
+    playLose();
     gameOver = true;
     playAgainBtn.style.display = 'inline-block';
     aiStartsNext = !aiStartsNext;
@@ -310,6 +335,7 @@ async function handleHumanMove(idx) {
   if (board.every(Boolean)) {
     updateHumanScore('draw');
     statusEl.textContent = 'Empate';
+    playDraw();
     gameOver = true;
     playAgainBtn.style.display = 'inline-block';
     aiStartsNext = !aiStartsNext;
@@ -428,6 +454,8 @@ playAgainBtn.addEventListener('click', () => {
 function showPlay() {
   playSection.classList.add('active');
   trainSection.classList.remove('active');
+  boardEl.style.display = 'grid';
+  statusEl.style.display = 'block';
   if (running) {
     running = false;
     startBtn.textContent = 'Iniciar Treino';
@@ -437,6 +465,8 @@ function showPlay() {
 function showTrain() {
   trainSection.classList.add('active');
   playSection.classList.remove('active');
+  boardEl.style.display = 'grid';
+  statusEl.style.display = 'block';
   if (humanPlaying) {
     humanPlaying = false;
     epsilon = EPSILON_TRAINING;
@@ -451,5 +481,7 @@ function showTrain() {
 tabPlay.addEventListener('click', showPlay);
 tabTrain.addEventListener('click', showTrain);
 
-showTrain();
-renderBoard();
+toggleSoundBtn.addEventListener('click', () => {
+  soundEnabled = !soundEnabled;
+  toggleSoundBtn.textContent = soundEnabled ? '🔊' : '🔈';
+});
