@@ -31,8 +31,6 @@ O diretório `tic-tac-toe` contém um pequeno jogo da velha em HTML, CSS e JavaS
 
 Após treinar ou carregar uma Q-Table, use o botão **Jogar contra Robô** para desafiar o algoritmo treinado. Clique nas casas do tabuleiro para fazer sua jogada e o agente responderá automaticamente.
 
-Um arquivo `pretrained_qtable.json` já está disponível no diretório `tic-tac-toe` e é carregado automaticamente ao abrir a página. Assim você pode jogar contra um agente previamente treinado sem precisar executar o processo de treino.
-
 ### Reutilizando o modelo treinado
 
 1. Treine o agente no arquivo `tic-tac-toe/index.html` até que os resultados estejam satisfatórios.
