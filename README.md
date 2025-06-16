@@ -1,46 +1,14 @@
-# Reconhecimento de Fala
+# Jogo da Velha com Aprendizado por Reforço
 
-Este projeto usa Node.js e Express para servir uma página que transcreve o áudio capturado pelo microfone do Windows. Ao clicar em **Iniciar Microfone**, o navegador pede permissão para acessar o microfone e o texto falado aparece em tempo real na tela.
+Este repositório contém um experimento simples em que um agente aprende a jogar Jogo da Velha utilizando uma Q-Table. Todo o treinamento e o jogo acontecem direto no navegador.
 
 ## Como usar
 
-Instale as dependências e inicie o servidor:
+Abra `tic-tac-toe/index.html` em um navegador moderno e acompanhe o treinamento do robô. Algumas funcionalidades disponíveis:
 
-```bash
-npm install
-npm start
-```
+- **Iniciar Treino** pausa ou continua o processo de aprendizagem.
+- **Velocidade** permite ajustar o intervalo entre as jogadas ou ativar o `Modo Turbo` para acelerar.
+- **Exportar Algoritmo** salva a Q-Table aprendida em um arquivo JSON.
+- **Jogar contra Robô** carrega uma Q-Table previamente exportada para desafiar o agente.
 
-Abra `http://localhost:3000` em um navegador compatível (Chrome ou Edge), permita o acesso ao microfone e comece a falar para ver a transcrição.
-
-## Aprimorar transcrição de músicas
-
-Para obter resultados melhores ao transcrever canções, defina a variável de ambiente `OPENAI_API_KEY` com sua chave da OpenAI. Quando essa variável estiver presente o servidor usará o modelo `whisper-1` da OpenAI para analisar o áudio enviado e gerar a transcrição palavra por palavra, mesmo em trechos com instrumentais.
-
-## Transcrição de vídeos
-
-Também é possível enviar um arquivo de vídeo para que o servidor extraia o áudio e tente transcrever o conteúdo. Basta selecionar o vídeo no campo **Transcrever Vídeo** e clicar no botão correspondente. O resultado é exibido em uma área de texto abaixo do player.
-
-## Transcrever YouTube
-
-Para transcrever um vídeo do YouTube, cole o link no campo **Transcrever YouTube** e clique em **Carregar Vídeo**. Depois pressione **Transcrever YouTube** para iniciar a captura. O navegador solicitará que você compartilhe uma aba com áudio; escolha a aba do YouTube. O áudio será gravado por alguns segundos e então enviado para transcrição.
-
-## Jogo da Velha
-
-O diretório `tic-tac-toe` contém um pequeno jogo da velha em HTML, CSS e JavaScript com um agente de aprendizado por reforço. Abra o arquivo `index.html` em um navegador para iniciar o treino. Após um tempo de treino você pode exportar o algoritmo clicando em **Exportar Algoritmo**.
-
-O algoritmo agora considera simetrias do tabuleiro ao treinar, reduzindo a quantidade de partidas necessárias para que o robô aprenda a vencer o oponente aleatório.
-
-Desde esta versão o treinamento também escolhe aleatoriamente quem inicia cada
-partida, permitindo que o modelo jogue bem mesmo quando o humano faz a
-primeira jogada.
-
-Clique em **Jogar contra Robô** para escolher a Q-Table que o robô utilizará na partida. Após selecionar o arquivo, o agente carregará esse conhecimento e fará a primeira jogada (o treinamento pressupõe que ele inicie). Em seguida clique nas casas do tabuleiro para fazer sua jogada e o robô responderá automaticamente tentando sempre vencer.
-
-### Reutilizando o modelo treinado
-
-1. Treine o agente no arquivo `tic-tac-toe/index.html` até que os resultados estejam satisfatórios.
-2. Clique em **Exportar Algoritmo** para baixar o arquivo `qtable.json` com a tabela Q aprendida.
-3. Guarde esse arquivo em um local seguro.
-4. Quando quiser reutilizar o modelo, abra `index.html` e use o botão **Carregar Q-Table** para selecionar o arquivo `qtable.json` salvo.
-5. Após o carregamento o treino continuará a partir dos valores salvos.
+O algoritmo leva em conta simetrias do tabuleiro para reduzir a quantidade de partidas necessárias e alterna quem inicia cada jogo durante o treinamento, garantindo que o robô saiba jogar bem dos dois lados.
