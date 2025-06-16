@@ -20,6 +20,11 @@ const qTable = {};
 const epsilon = 0.2;
 const alpha = 0.3;
 const gamma = 0.9;
+const speedInput = document.getElementById('speed');
+let stepDelay = Number(speedInput?.value) || 0;
+speedInput?.addEventListener('input', () => {
+  stepDelay = Number(speedInput.value) || 0;
+});
 
 function updateQTableInfo() {
   const infoEl = document.getElementById('qtable-info');
@@ -190,7 +195,7 @@ async function playGame() {
       break;
     }
     currentPlayer = currentPlayer === 'O' ? 'X' : 'O';
-    await delay(20);
+    await delay(stepDelay);
   }
   let result;
   if (checkWin('O')) result = 'q';
@@ -199,7 +204,7 @@ async function playGame() {
   const reward = result === 'q' ? 1 : result === 'r' ? -1 : 0.5;
   updateQ(qStates, reward);
   updateScore(result);
-  await delay(50);
+  await delay(stepDelay);
 }
 
 async function trainingLoop() {
