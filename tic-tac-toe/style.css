@@ -25,6 +25,18 @@ h1 {
   margin: 0 auto;
 }
 
+.menu {
+  margin-bottom: 20px;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
 .board {
   display: grid;
   grid-template-columns: repeat(3, 120px);

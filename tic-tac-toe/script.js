@@ -14,6 +14,10 @@ const fileInput = document.getElementById('qtable-file');
 const loadBtn = document.getElementById('load-qtable');
 const ctx = document.getElementById('chart').getContext('2d');
 const playAiBtn = document.getElementById('play-ai');
+const tabPlay = document.getElementById('tab-play');
+const tabTrain = document.getElementById('tab-train');
+const playSection = document.getElementById('play-section');
+const trainSection = document.getElementById('train-section');
 
 let board;
 let currentPlayer;
@@ -419,4 +423,31 @@ playAgainBtn.addEventListener('click', () => {
   }
 });
 
+function showPlay() {
+  playSection.classList.add('active');
+  trainSection.classList.remove('active');
+  if (running) {
+    running = false;
+    startBtn.textContent = 'Iniciar Treino';
+  }
+}
+
+function showTrain() {
+  trainSection.classList.add('active');
+  playSection.classList.remove('active');
+  if (humanPlaying) {
+    humanPlaying = false;
+    epsilon = EPSILON_TRAINING;
+    playAiBtn.textContent = 'Jogar contra Rob\u00f4';
+    statusEl.textContent = '';
+    renderBoard();
+    playAgainBtn.style.display = 'none';
+    humanScoreboardEl.style.display = 'none';
+  }
+}
+
+tabPlay.addEventListener('click', showPlay);
+tabTrain.addEventListener('click', showTrain);
+
+showTrain();
 renderBoard();
