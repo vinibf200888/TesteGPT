@@ -7,10 +7,17 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Jogo da Velha</h1>
+  <h1>Treino Jogo da Velha</h1>
   <div id="game" class="board"></div>
   <p id="status"></p>
-  <button id="reset">Reiniciar</button>
+  <div id="scoreboard">
+    <p>Vitórias Robo ML: <span id="q-wins">0</span></p>
+    <p>Vitórias Robo Aleatório: <span id="random-wins">0</span></p>
+    <p>Empates: <span id="draws">0</span></p>
+  </div>
+  <button id="start-stop">Iniciar Treino</button>
+  <canvas id="chart" width="400" height="200"></canvas>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
