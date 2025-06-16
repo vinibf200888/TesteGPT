@@ -40,6 +40,14 @@ let stepDelay = Number(speedInput?.value) || 0;
 speedInput?.addEventListener('input', () => {
   stepDelay = Number(speedInput.value) || 0;
 });
+const speedMultiplierInput = document.getElementById('speed-multiplier');
+const speedValueEl = document.getElementById('speed-value');
+let speedMultiplier = Number(speedMultiplierInput?.value) || 1;
+if (speedValueEl) speedValueEl.textContent = `${speedMultiplier}x`;
+speedMultiplierInput?.addEventListener('input', () => {
+  speedMultiplier = Number(speedMultiplierInput.value) || 1;
+  if (speedValueEl) speedValueEl.textContent = `${speedMultiplier}x`;
+});
 const fastInput = document.getElementById('fast-mode');
 let fastMode = fastInput?.checked || false;
 fastInput?.addEventListener('change', () => {
@@ -232,7 +240,9 @@ function updateQ(states, reward) {
   if (!fastMode) updateQTableInfo();
 }
 
-function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
+function delay(ms) {
+  return new Promise(res => setTimeout(res, ms / speedMultiplier));
+}
 
 function startHumanGame() {
   // usa somente o conhecimento aprendido para desafiar o jogador
