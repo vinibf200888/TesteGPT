@@ -31,6 +31,10 @@ O diretório `tic-tac-toe` contém um pequeno jogo da velha em HTML, CSS e JavaS
 
 O algoritmo agora considera simetrias do tabuleiro ao treinar, reduzindo a quantidade de partidas necessárias para que o robô aprenda a vencer o oponente aleatório.
 
+Desde esta versão o treinamento também escolhe aleatoriamente quem inicia cada
+partida, permitindo que o modelo jogue bem mesmo quando o humano faz a
+primeira jogada.
+
 Clique em **Jogar contra Robô** para escolher a Q-Table que o robô utilizará na partida. Após selecionar o arquivo, o agente carregará esse conhecimento e fará a primeira jogada (o treinamento pressupõe que ele inicie). Em seguida clique nas casas do tabuleiro para fazer sua jogada e o robô responderá automaticamente tentando sempre vencer.
 
 ### Reutilizando o modelo treinado

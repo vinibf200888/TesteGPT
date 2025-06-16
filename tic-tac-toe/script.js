@@ -309,7 +309,8 @@ async function handleHumanMove(idx) {
 
 async function playGame() {
   board = Array(9).fill(null);
-  currentPlayer = 'O';
+  // randomiza quem inicia para treinar a jogar de ambos os lados
+  currentPlayer = Math.random() < 0.5 ? 'O' : 'X';
   gameOver = false;
   const qStates = [];
   renderBoard();
