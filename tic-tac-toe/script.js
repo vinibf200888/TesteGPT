@@ -8,11 +8,13 @@ const exportBtn = document.getElementById('export-btn');
 const fileInput = document.getElementById('qtable-file');
 const loadBtn = document.getElementById('load-qtable');
 const ctx = document.getElementById('chart').getContext('2d');
+const playAiBtn = document.getElementById('play-ai');
 
 let board;
 let currentPlayer;
 let gameOver;
 let running = false;
+let humanPlaying = false;
 let qWins = 0;
 let rWins = 0;
 let draws = 0;
@@ -131,12 +133,13 @@ function checkWin(player) {
   return c.some(combo => combo.every(i => board[i] === player));
 }
 
-function renderBoard() {
+function renderBoard(onClick) {
   boardEl.innerHTML = '';
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement('div');
     cell.className = 'cell';
     cell.textContent = board[i] || '';
+    if (onClick) cell.addEventListener('click', () => onClick(i));
     boardEl.appendChild(cell);
   }
 }
@@ -166,6 +169,53 @@ function updateQ(states, reward) {
 }
 
 function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+function startHumanGame() {
+  board = Array(9).fill(null);
+  gameOver = false;
+  statusEl.textContent = 'Sua vez';
+  renderBoard(handleHumanMove);
+}
+
+async function handleHumanMove(idx) {
+  if (gameOver || board[idx]) return;
+  makeMove(idx, 'X');
+  renderBoard(handleHumanMove);
+  if (checkWin('X')) {
+    statusEl.textContent = 'Voc\u00ea venceu!';
+    gameOver = true;
+    humanPlaying = false;
+    playAiBtn.textContent = 'Jogar contra Rob\u00f4';
+    return;
+  }
+  if (board.every(Boolean)) {
+    statusEl.textContent = 'Empate';
+    gameOver = true;
+    humanPlaying = false;
+    playAiBtn.textContent = 'Jogar contra Rob\u00f4';
+    return;
+  }
+  statusEl.textContent = 'Rob\u00f4 pensando...';
+  await delay(stepDelay);
+  const aiIdx = chooseQMove(board);
+  makeMove(aiIdx, 'O');
+  renderBoard(handleHumanMove);
+  if (checkWin('O')) {
+    statusEl.textContent = 'Rob\u00f4 venceu!';
+    gameOver = true;
+    humanPlaying = false;
+    playAiBtn.textContent = 'Jogar contra Rob\u00f4';
+    return;
+  }
+  if (board.every(Boolean)) {
+    statusEl.textContent = 'Empate';
+    gameOver = true;
+    humanPlaying = false;
+    playAiBtn.textContent = 'Jogar contra Rob\u00f4';
+    return;
+  }
+  statusEl.textContent = 'Sua vez';
+}
 
 async function playGame() {
   board = Array(9).fill(null);
@@ -223,6 +273,23 @@ exportBtn.addEventListener('click', exportQTable);
 loadBtn.addEventListener('click', () => {
   if (fileInput.files.length > 0) {
     loadQTableFromFile(fileInput.files[0]);
+  }
+});
+
+playAiBtn.addEventListener('click', () => {
+  if (running) {
+    alert('Pausar o treino antes de jogar.');
+    return;
+  }
+  if (humanPlaying) {
+    humanPlaying = false;
+    playAiBtn.textContent = 'Jogar contra Rob\u00f4';
+    statusEl.textContent = '';
+    renderBoard();
+  } else {
+    humanPlaying = true;
+    playAiBtn.textContent = 'Sair do Jogo';
+    startHumanGame();
   }
 });
 
