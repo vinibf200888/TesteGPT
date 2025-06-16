@@ -24,3 +24,7 @@ Também é possível enviar um arquivo de vídeo para que o servidor extraia o �
 ## Transcrever YouTube
 
 Para transcrever um vídeo do YouTube, cole o link no campo **Transcrever YouTube** e clique em **Carregar Vídeo**. Depois pressione **Transcrever YouTube** para iniciar a captura. O navegador solicitará que você compartilhe uma aba com áudio; escolha a aba do YouTube. O áudio será gravado por alguns segundos e então enviado para transcrição.
+
+## Jogo da Velha
+
+O diretório `tic-tac-toe` contém um pequeno jogo da velha em HTML, CSS e JavaScript. Abra o arquivo `index.html` em um navegador para jogar contra outro participante.
