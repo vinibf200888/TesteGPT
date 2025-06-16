@@ -25,9 +25,17 @@ async function loadQTable() {
     if (res.ok) {
       const data = await res.json();
       Object.assign(qTable, data);
+      const qDisplay = document.getElementById('qtable-display');
+      if (qDisplay) {
+        qDisplay.textContent = JSON.stringify(qTable, null, 2);
+      }
     }
   } catch (e) {
     console.warn('Nenhuma tabela Q prévia encontrada');
+    const qDisplay = document.getElementById('qtable-display');
+    if (qDisplay) {
+      qDisplay.textContent = 'Nenhuma tabela Q prévia encontrada';
+    }
   }
 }
 
