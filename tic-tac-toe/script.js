@@ -299,9 +299,19 @@ playAiBtn.addEventListener('click', () => {
     statusEl.textContent = '';
     renderBoard();
   } else {
-    humanPlaying = true;
-    playAiBtn.textContent = 'Sair do Jogo';
-    startHumanGame();
+    // permite ao usuário escolher a Q-Table que será usada na partida
+    fileInput.value = '';
+    const handler = () => {
+      if (fileInput.files.length > 0) {
+        loadQTableFromFile(fileInput.files[0]);
+        humanPlaying = true;
+        playAiBtn.textContent = 'Sair do Jogo';
+        startHumanGame();
+      }
+      fileInput.removeEventListener('change', handler);
+    };
+    fileInput.addEventListener('change', handler, { once: true });
+    fileInput.click();
   }
 });
 
