@@ -19,18 +19,6 @@ let qWins = 0;
 let rWins = 0;
 let draws = 0;
 const qTable = {};
-// tenta carregar uma Q-Table pretreinada se existir
-fetch('pretrained_qtable.json')
-  .then(res => res.ok ? res.json() : null)
-  .then(data => {
-    if (data) {
-      Object.assign(qTable, data);
-      const qDisplay = document.getElementById('qtable-display');
-      if (qDisplay) qDisplay.textContent = JSON.stringify(qTable, null, 2);
-      updateQTableInfo();
-    }
-  })
-  .catch(err => console.error('Erro ao carregar Q-Table pretreinada', err));
 // taxa de exploração durante o treinamento
 const EPSILON_TRAINING = 0.2;
 // exploração desligada ao jogar contra o usuário
