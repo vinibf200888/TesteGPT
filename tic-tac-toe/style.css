@@ -36,3 +36,14 @@ body {
   max-width: 600px;
   margin: 0 auto;
 }
+
+#qtable-info,
+#qtable-display {
+  text-align: left;
+  max-height: 300px;
+  overflow: auto;
+  margin: 0 auto 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 90%;
+}
