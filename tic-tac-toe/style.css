@@ -32,6 +32,10 @@ body {
   margin-bottom: 20px;
 }
 
+#human-scoreboard {
+  margin-bottom: 20px;
+}
+
 #chart {
   max-width: 600px;
   margin: 0 auto;

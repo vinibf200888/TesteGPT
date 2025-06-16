@@ -3,6 +3,11 @@ const statusEl = document.getElementById('status');
 const qWinsEl = document.getElementById('q-wins');
 const rWinsEl = document.getElementById('random-wins');
 const drawsEl = document.getElementById('draws');
+const playerWinsEl = document.getElementById('player-wins');
+const aiWinsPlayerEl = document.getElementById('ai-wins-player');
+const playerDrawsEl = document.getElementById('player-draws');
+const playAgainBtn = document.getElementById('play-again');
+const humanScoreboardEl = document.getElementById('human-scoreboard');
 const startBtn = document.getElementById('start-stop');
 const exportBtn = document.getElementById('export-btn');
 const fileInput = document.getElementById('qtable-file');
@@ -18,11 +23,15 @@ let humanPlaying = false;
 let qWins = 0;
 let rWins = 0;
 let draws = 0;
+let playerWins = 0;
+let aiWinsPlayer = 0;
+let drawsPlayer = 0;
+let aiStartsNext = true;
 const qTable = {};
 // taxa de exploração durante o treinamento
 const EPSILON_TRAINING = 0.2;
-// exploração desligada ao jogar contra o usuário
-const EPSILON_PLAY = 0;
+// pequena exploração ao jogar contra o usuário para variar as jogadas
+const EPSILON_PLAY = 0.1;
 let epsilon = EPSILON_TRAINING;
 const alpha = 0.3;
 const gamma = 0.9;
@@ -115,13 +124,18 @@ function chooseQMove(b) {
   if (!qTable[state]) qTable[state] = Array(9).fill(0);
   if (Math.random() < epsilon) return randomMove(b);
   const moves = emptyIndices(b);
-  let best = moves[0];
   let bestVal = -Infinity;
+  let bestMoves = [];
   moves.forEach(i => {
     const val = qTable[state][i] || 0;
-    if (val > bestVal) { bestVal = val; best = i; }
+    if (val > bestVal) {
+      bestVal = val;
+      bestMoves = [i];
+    } else if (val === bestVal) {
+      bestMoves.push(i);
+    }
   });
-  return best;
+  return bestMoves[Math.floor(Math.random() * bestMoves.length)];
 }
 
 function makeMove(idx, player) {
@@ -161,6 +175,15 @@ function updateScore(result) {
   chart.update();
 }
 
+function updateHumanScore(result) {
+  if (result === 'player') playerWins++;
+  else if (result === 'ai') aiWinsPlayer++;
+  else drawsPlayer++;
+  if (playerWinsEl) playerWinsEl.textContent = playerWins;
+  if (aiWinsPlayerEl) aiWinsPlayerEl.textContent = aiWinsPlayer;
+  if (playerDrawsEl) playerDrawsEl.textContent = drawsPlayer;
+}
+
 function updateQ(states, reward) {
   for (let i = states.length - 1; i >= 0; i--) {
     const { state, action } = states[i];
@@ -179,11 +202,18 @@ function startHumanGame() {
   epsilon = EPSILON_PLAY;
   board = Array(9).fill(null);
   gameOver = false;
-  // o agente foi treinado iniciando as partidas, entao ele faz a primeira jogada
-  const aiIdx = chooseQMove(board);
-  makeMove(aiIdx, 'O');
+  humanScoreboardEl.style.display = 'block';
+  playAgainBtn.style.display = 'none';
   renderBoard(handleHumanMove);
-  statusEl.textContent = 'Sua vez';
+  if (aiStartsNext) {
+    statusEl.textContent = 'Robô pensando...';
+    const aiIdx = chooseQMove(board);
+    makeMove(aiIdx, 'O');
+    renderBoard(handleHumanMove);
+    statusEl.textContent = 'Sua vez';
+  } else {
+    statusEl.textContent = 'Sua vez';
+  }
 }
 
 async function handleHumanMove(idx) {
@@ -191,17 +221,19 @@ async function handleHumanMove(idx) {
   makeMove(idx, 'X');
   renderBoard(handleHumanMove);
   if (checkWin('X')) {
+    updateHumanScore('player');
     statusEl.textContent = 'Voc\u00ea venceu!';
     gameOver = true;
-    humanPlaying = false;
-    playAiBtn.textContent = 'Jogar contra Rob\u00f4';
+    playAgainBtn.style.display = 'inline-block';
+    aiStartsNext = !aiStartsNext;
     return;
   }
   if (board.every(Boolean)) {
+    updateHumanScore('draw');
     statusEl.textContent = 'Empate';
     gameOver = true;
-    humanPlaying = false;
-    playAiBtn.textContent = 'Jogar contra Rob\u00f4';
+    playAgainBtn.style.display = 'inline-block';
+    aiStartsNext = !aiStartsNext;
     return;
   }
   statusEl.textContent = 'Rob\u00f4 pensando...';
@@ -210,17 +242,19 @@ async function handleHumanMove(idx) {
   makeMove(aiIdx, 'O');
   renderBoard(handleHumanMove);
   if (checkWin('O')) {
+    updateHumanScore('ai');
     statusEl.textContent = 'Rob\u00f4 venceu!';
     gameOver = true;
-    humanPlaying = false;
-    playAiBtn.textContent = 'Jogar contra Rob\u00f4';
+    playAgainBtn.style.display = 'inline-block';
+    aiStartsNext = !aiStartsNext;
     return;
   }
   if (board.every(Boolean)) {
+    updateHumanScore('draw');
     statusEl.textContent = 'Empate';
     gameOver = true;
-    humanPlaying = false;
-    playAiBtn.textContent = 'Jogar contra Rob\u00f4';
+    playAgainBtn.style.display = 'inline-block';
+    aiStartsNext = !aiStartsNext;
     return;
   }
   statusEl.textContent = 'Sua vez';
@@ -301,6 +335,8 @@ playAiBtn.addEventListener('click', () => {
     playAiBtn.textContent = 'Jogar contra Rob\u00f4';
     statusEl.textContent = '';
     renderBoard();
+    playAgainBtn.style.display = 'none';
+    humanScoreboardEl.style.display = 'none';
   } else {
     // permite ao usuário escolher a Q-Table que será usada na partida
     fileInput.value = '';
@@ -315,6 +351,12 @@ playAiBtn.addEventListener('click', () => {
     };
     fileInput.addEventListener('change', handler, { once: true });
     fileInput.click();
+  }
+});
+
+playAgainBtn.addEventListener('click', () => {
+  if (humanPlaying) {
+    startHumanGame();
   }
 });
 
