@@ -4,6 +4,7 @@ const qWinsEl = document.getElementById('q-wins');
 const rWinsEl = document.getElementById('random-wins');
 const drawsEl = document.getElementById('draws');
 const startBtn = document.getElementById('start-stop');
+const exportBtn = document.getElementById('export-btn');
 const ctx = document.getElementById('chart').getContext('2d');
 
 let board;
@@ -17,6 +18,27 @@ const qTable = {};
 const epsilon = 0.2;
 const alpha = 0.3;
 const gamma = 0.9;
+
+async function loadQTable() {
+  try {
+    const res = await fetch('qtable.json');
+    if (res.ok) {
+      const data = await res.json();
+      Object.assign(qTable, data);
+    }
+  } catch (e) {
+    console.warn('Nenhuma tabela Q prévia encontrada');
+  }
+}
+
+function exportQTable() {
+  const dataStr = 'data:text/json;charset=utf-8,' +
+    encodeURIComponent(JSON.stringify(qTable));
+  const dl = document.createElement('a');
+  dl.setAttribute('href', dataStr);
+  dl.setAttribute('download', 'qtable.json');
+  dl.click();
+}
 
 const chart = new Chart(ctx, {
   type: 'line',
@@ -162,4 +184,6 @@ startBtn.addEventListener('click', () => {
   if (running) trainingLoop();
 });
 
-renderBoard();
+exportBtn.addEventListener('click', exportQTable);
+
+loadQTable().then(renderBoard);

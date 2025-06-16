@@ -27,4 +27,12 @@ Para transcrever um vídeo do YouTube, cole o link no campo **Transcrever YouTub
 
 ## Jogo da Velha
 
-O diretório `tic-tac-toe` contém um pequeno jogo da velha em HTML, CSS e JavaScript. Abra o arquivo `index.html` em um navegador para jogar contra outro participante.
+O diretório `tic-tac-toe` contém um pequeno jogo da velha em HTML, CSS e JavaScript com um agente de aprendizado por reforço. Abra o arquivo `index.html` em um navegador para iniciar o treino. Após um tempo de treino você pode exportar o algoritmo clicando em **Exportar Algoritmo**.
+
+### Reutilizando o modelo treinado
+
+1. Treine o agente no arquivo `tic-tac-toe/index.html` até que os resultados estejam satisfatórios.
+2. Clique em **Exportar Algoritmo** para baixar o arquivo `qtable.json` com a tabela Q aprendida.
+3. Guarde esse arquivo em um local seguro.
+4. Quando quiser reutilizar o modelo, copie `qtable.json` de volta para o diretório `tic-tac-toe` antes de abrir `index.html` novamente.
+5. Ao carregar a página o script lerá automaticamente o arquivo e continuará o treinamento a partir dos valores salvos.
