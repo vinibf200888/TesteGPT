@@ -209,7 +209,9 @@ function renderBoard(onClick) {
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement('div');
     cell.className = 'cell';
-    cell.textContent = board[i] || '';
+    const mark = board[i];
+    cell.textContent = mark || '';
+    if (mark) cell.classList.add(mark === 'X' ? 'x' : 'o');
     if (onClick) cell.addEventListener('click', () => onClick(i));
     boardEl.appendChild(cell);
   }
