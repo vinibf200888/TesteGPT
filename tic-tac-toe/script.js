@@ -104,8 +104,28 @@ const chart = new Chart(ctx, {
   }
 });
 
-function getState(b) {
-  return b.map(v => v || '-').join('');
+const ORIENTATIONS = [
+  [0,1,2,3,4,5,6,7,8],
+  [6,3,0,7,4,1,8,5,2],
+  [8,7,6,5,4,3,2,1,0],
+  [2,5,8,1,4,7,0,3,6],
+  [2,1,0,5,4,3,8,7,6],
+  [6,7,8,3,4,5,0,1,2],
+  [0,3,6,1,4,7,2,5,8],
+  [8,5,2,7,4,1,6,3,0]
+];
+
+function canonicalizeBoard(b) {
+  let bestState = null;
+  let bestMap = ORIENTATIONS[0];
+  for (const map of ORIENTATIONS) {
+    const state = map.map(i => b[i] || '-').join('');
+    if (bestState === null || state < bestState) {
+      bestState = state;
+      bestMap = map;
+    }
+  }
+  return { state: bestState, map: bestMap };
 }
 
 function emptyIndices(b) {
@@ -120,14 +140,15 @@ function randomMove(b) {
 }
 
 function chooseQMove(b) {
-  const state = getState(b);
+  const { state, map } = canonicalizeBoard(b);
   if (!qTable[state]) qTable[state] = Array(9).fill(0);
   if (Math.random() < epsilon) return randomMove(b);
   const moves = emptyIndices(b);
   let bestVal = -Infinity;
   let bestMoves = [];
   moves.forEach(i => {
-    const val = qTable[state][i] || 0;
+    const canonicalIdx = map.indexOf(i);
+    const val = qTable[state][canonicalIdx] || 0;
     if (val > bestVal) {
       bestVal = val;
       bestMoves = [i];
@@ -188,7 +209,8 @@ function updateQ(states, reward) {
   for (let i = states.length - 1; i >= 0; i--) {
     const { state, action } = states[i];
     if (!qTable[state]) qTable[state] = Array(9).fill(0);
-    const nextMax = i < states.length - 1 ? Math.max(...qTable[states[i+1].state]) : 0;
+    const nextState = i < states.length - 1 ? states[i + 1].state : null;
+    const nextMax = nextState && qTable[nextState] ? Math.max(...qTable[nextState]) : 0;
     qTable[state][action] += alpha * (reward + gamma * nextMax - qTable[state][action]);
     reward *= gamma;
   }
@@ -269,9 +291,10 @@ async function playGame() {
   while (!gameOver) {
     let idx;
     if (currentPlayer === 'O') {
-      const state = getState(board);
+      const { state, map } = canonicalizeBoard(board);
       idx = chooseQMove(board);
-      qStates.push({ state, action: idx });
+      const canonicalIdx = map.indexOf(idx);
+      qStates.push({ state, action: canonicalIdx });
       makeMove(idx, 'O');
     } else {
       idx = randomMove(board);
