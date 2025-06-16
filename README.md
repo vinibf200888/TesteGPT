@@ -29,6 +29,8 @@ Para transcrever um vídeo do YouTube, cole o link no campo **Transcrever YouTub
 
 O diretório `tic-tac-toe` contém um pequeno jogo da velha em HTML, CSS e JavaScript com um agente de aprendizado por reforço. Abra o arquivo `index.html` em um navegador para iniciar o treino. Após um tempo de treino você pode exportar o algoritmo clicando em **Exportar Algoritmo**.
 
+Após treinar ou carregar uma Q-Table, use o botão **Jogar contra Robô** para desafiar o algoritmo treinado. Clique nas casas do tabuleiro para fazer sua jogada e o agente responderá automaticamente.
+
 ### Reutilizando o modelo treinado
 
 1. Treine o agente no arquivo `tic-tac-toe/index.html` até que os resultados estejam satisfatórios.
