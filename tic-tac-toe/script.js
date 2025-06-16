@@ -5,6 +5,8 @@ const rWinsEl = document.getElementById('random-wins');
 const drawsEl = document.getElementById('draws');
 const startBtn = document.getElementById('start-stop');
 const exportBtn = document.getElementById('export-btn');
+const fileInput = document.getElementById('qtable-file');
+const loadBtn = document.getElementById('load-qtable');
 const ctx = document.getElementById('chart').getContext('2d');
 
 let board;
@@ -19,24 +21,22 @@ const epsilon = 0.2;
 const alpha = 0.3;
 const gamma = 0.9;
 
-async function loadQTable() {
-  try {
-    const res = await fetch('qtable.json');
-    if (res.ok) {
-      const data = await res.json();
+function loadQTableFromFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
       Object.assign(qTable, data);
       const qDisplay = document.getElementById('qtable-display');
       if (qDisplay) {
         qDisplay.textContent = JSON.stringify(qTable, null, 2);
       }
+    } catch (err) {
+      console.error('Erro ao carregar Q-Table', err);
+      alert('Arquivo de Q-Table inválido');
     }
-  } catch (e) {
-    console.warn('Nenhuma tabela Q prévia encontrada');
-    const qDisplay = document.getElementById('qtable-display');
-    if (qDisplay) {
-      qDisplay.textContent = 'Nenhuma tabela Q prévia encontrada';
-    }
-  }
+  };
+  reader.readAsText(file);
 }
 
 function exportQTable() {
@@ -193,5 +193,10 @@ startBtn.addEventListener('click', () => {
 });
 
 exportBtn.addEventListener('click', exportQTable);
+loadBtn.addEventListener('click', () => {
+  if (fileInput.files.length > 0) {
+    loadQTableFromFile(fileInput.files[0]);
+  }
+});
 
-loadQTable().then(renderBoard);
+renderBoard();

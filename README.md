@@ -34,5 +34,5 @@ O diretório `tic-tac-toe` contém um pequeno jogo da velha em HTML, CSS e JavaS
 1. Treine o agente no arquivo `tic-tac-toe/index.html` até que os resultados estejam satisfatórios.
 2. Clique em **Exportar Algoritmo** para baixar o arquivo `qtable.json` com a tabela Q aprendida.
 3. Guarde esse arquivo em um local seguro.
-4. Quando quiser reutilizar o modelo, copie `qtable.json` de volta para o diretório `tic-tac-toe` antes de abrir `index.html` novamente.
-5. Ao carregar a página o script lerá automaticamente o arquivo e continuará o treinamento a partir dos valores salvos.
+4. Quando quiser reutilizar o modelo, abra `index.html` e use o botão **Carregar Q-Table** para selecionar o arquivo `qtable.json` salvo.
+5. Após o carregamento o treino continuará a partir dos valores salvos.
