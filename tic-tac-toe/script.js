@@ -19,7 +19,11 @@ let qWins = 0;
 let rWins = 0;
 let draws = 0;
 const qTable = {};
-const epsilon = 0.2;
+// taxa de exploração durante o treinamento
+const EPSILON_TRAINING = 0.2;
+// exploração desligada ao jogar contra o usuário
+const EPSILON_PLAY = 0;
+let epsilon = EPSILON_TRAINING;
 const alpha = 0.3;
 const gamma = 0.9;
 const speedInput = document.getElementById('speed');
@@ -171,6 +175,8 @@ function updateQ(states, reward) {
 function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
 
 function startHumanGame() {
+  // usa somente o conhecimento aprendido para desafiar o jogador
+  epsilon = EPSILON_PLAY;
   board = Array(9).fill(null);
   gameOver = false;
   statusEl.textContent = 'Sua vez';
@@ -266,7 +272,11 @@ async function trainingLoop() {
 startBtn.addEventListener('click', () => {
   running = !running;
   startBtn.textContent = running ? 'Pausar' : 'Iniciar Treino';
-  if (running) trainingLoop();
+  if (running) {
+    // volta a explorar para continuar o aprendizado
+    epsilon = EPSILON_TRAINING;
+    trainingLoop();
+  }
 });
 
 exportBtn.addEventListener('click', exportQTable);
@@ -283,6 +293,8 @@ playAiBtn.addEventListener('click', () => {
   }
   if (humanPlaying) {
     humanPlaying = false;
+    // volta à taxa de exploração usada no treinamento
+    epsilon = EPSILON_TRAINING;
     playAiBtn.textContent = 'Jogar contra Rob\u00f4';
     statusEl.textContent = '';
     renderBoard();
