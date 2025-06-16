@@ -1,15 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
+
 :root {
-  --bg: #f0f4f8;
-  --primary: #6c63ff;
-  --primary-dark: #5548c8;
-  --board-bg: #ffffff;
-  --hover: #e8e6ff;
+  --bg: #0a0a0a;
+  --text: #f5f5f5;
+  --primary: #00f0ff;
+  --primary-dark: #00aaff;
+  --accent: #ff00ff;
+  --board-bg: #111;
+  --hover: #222;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Audiowide', cursive;
   background-color: var(--bg);
-  color: #333;
+  color: var(--text);
   text-align: center;
   margin: 0;
   padding: 20px;
@@ -17,7 +21,8 @@ body {
 
 h1 {
   margin-top: 20px;
-  color: var(--primary);
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
 }
 
 .container {
@@ -41,9 +46,9 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, 120px);
   grid-template-rows: repeat(3, 120px);
-  gap: 10px;
+  gap: 15px;
   justify-content: center;
-  margin: 20px auto;
+  margin: 30px auto;
 }
 
 .cell {
@@ -55,12 +60,25 @@ h1 {
   background-color: var(--board-bg);
   border: 2px solid var(--primary);
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+  transition: background-color 0.2s, transform 0.1s, box-shadow 0.3s;
+  box-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary) inset;
+  color: var(--text);
 }
 
 .cell:hover {
   background-color: var(--hover);
+  box-shadow: 0 0 15px var(--primary), 0 0 30px var(--primary) inset;
   transform: scale(1.05);
+}
+
+.cell.x {
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
+}
+
+.cell.o {
+  color: var(--primary);
+  text-shadow: 0 0 10px var(--primary), 0 0 20px var(--primary);
 }
 
 button {
@@ -72,7 +90,8 @@ button {
   margin: 5px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.2s, transform 0.1s;
+  transition: background-color 0.2s, transform 0.1s, box-shadow 0.3s;
+  box-shadow: 0 0 10px var(--primary);
 }
 
 button:hover {
@@ -88,6 +107,8 @@ button:disabled {
 #status {
   font-weight: bold;
   margin-bottom: 10px;
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
 }
 
 #scoreboard, #human-scoreboard {
@@ -97,10 +118,10 @@ button:disabled {
 #chart {
   max-width: 600px;
   margin: 20px auto;
-  background-color: #fff;
+  background-color: #111;
   border-radius: 8px;
   padding: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px var(--primary);
 }
 
 #qtable-info,
@@ -110,8 +131,9 @@ button:disabled {
   overflow: auto;
   margin: 0 auto 20px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  border: 1px solid var(--primary);
+  background-color: #111;
   padding: 10px;
   width: 90%;
+  box-shadow: 0 0 10px var(--primary) inset;
 }
