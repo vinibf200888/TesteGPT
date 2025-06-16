@@ -179,8 +179,11 @@ function startHumanGame() {
   epsilon = EPSILON_PLAY;
   board = Array(9).fill(null);
   gameOver = false;
-  statusEl.textContent = 'Sua vez';
+  // o agente foi treinado iniciando as partidas, entao ele faz a primeira jogada
+  const aiIdx = chooseQMove(board);
+  makeMove(aiIdx, 'O');
   renderBoard(handleHumanMove);
+  statusEl.textContent = 'Sua vez';
 }
 
 async function handleHumanMove(idx) {
