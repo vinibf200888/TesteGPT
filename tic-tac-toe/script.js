@@ -225,21 +225,23 @@ async function handleHumanMove(idx) {
 
 async function playGame() {
   board = Array(9).fill(null);
-  currentPlayer = 'O';
   gameOver = false;
+  // sorteia se o agente joga como X ou O e quem faz a primeira jogada
+  const qPlayer = Math.random() < 0.5 ? 'O' : 'X';
+  const rPlayer = qPlayer === 'O' ? 'X' : 'O';
+  currentPlayer = Math.random() < 0.5 ? 'O' : 'X';
   const qStates = [];
   renderBoard();
   while (!gameOver) {
     let idx;
-    if (currentPlayer === 'O') {
+    if (currentPlayer === qPlayer) {
       const state = getState(board);
       idx = chooseQMove(board);
       qStates.push({ state, action: idx });
-      makeMove(idx, 'O');
     } else {
       idx = randomMove(board);
-      makeMove(idx, 'X');
     }
+    makeMove(idx, currentPlayer);
     renderBoard();
     if (checkWin(currentPlayer)) {
       gameOver = true;
@@ -254,8 +256,8 @@ async function playGame() {
     await delay(stepDelay);
   }
   let result;
-  if (checkWin('O')) result = 'q';
-  else if (checkWin('X')) result = 'r';
+  if (checkWin(qPlayer)) result = 'q';
+  else if (checkWin(rPlayer)) result = 'r';
   else result = 'd';
   const reward = result === 'q' ? 1 : result === 'r' ? -1 : 0.5;
   updateQ(qStates, reward);
