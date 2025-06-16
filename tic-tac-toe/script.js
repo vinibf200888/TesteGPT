@@ -40,6 +40,20 @@ let stepDelay = Number(speedInput?.value) || 0;
 speedInput?.addEventListener('input', () => {
   stepDelay = Number(speedInput.value) || 0;
 });
+const fastInput = document.getElementById('fast-mode');
+let fastMode = fastInput?.checked || false;
+fastInput?.addEventListener('change', () => {
+  fastMode = fastInput.checked;
+  if (!fastMode) {
+    // update board and scoreboard when leaving turbo mode
+    renderBoard();
+    qWinsEl.textContent = qWins;
+    rWinsEl.textContent = rWins;
+    drawsEl.textContent = draws;
+    chart.update();
+    updateQTableInfo();
+  }
+});
 
 function updateQTableInfo() {
   const infoEl = document.getElementById('qtable-info');
@@ -173,6 +187,7 @@ function checkWin(player) {
 }
 
 function renderBoard(onClick) {
+  if (fastMode && !humanPlaying) return;
   boardEl.innerHTML = '';
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement('div');
@@ -193,7 +208,7 @@ function updateScore(result) {
   chart.data.labels.push(chart.data.labels.length + 1);
   chart.data.datasets[0].data.push(qWins);
   chart.data.datasets[1].data.push(rWins);
-  chart.update();
+  if (!fastMode) chart.update();
 }
 
 function updateHumanScore(result) {
@@ -214,7 +229,7 @@ function updateQ(states, reward) {
     qTable[state][action] += alpha * (reward + gamma * nextMax - qTable[state][action]);
     reward *= gamma;
   }
-  updateQTableInfo();
+  if (!fastMode) updateQTableInfo();
 }
 
 function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
