@@ -21,6 +21,26 @@ const epsilon = 0.2;
 const alpha = 0.3;
 const gamma = 0.9;
 
+function updateQTableInfo() {
+  const infoEl = document.getElementById('qtable-info');
+  if (!infoEl) return;
+  const states = Object.keys(qTable);
+  let totalValues = 0;
+  let sum = 0;
+  let min = Infinity;
+  let max = -Infinity;
+  states.forEach(s => {
+    qTable[s].forEach(v => {
+      totalValues++;
+      sum += v;
+      if (v < min) min = v;
+      if (v > max) max = v;
+    });
+  });
+  const avg = totalValues ? sum / totalValues : 0;
+  infoEl.textContent = `Estados: ${states.length}\nValores: ${totalValues}\nMédia: ${avg.toFixed(2)}\nMin: ${min === Infinity ? 0 : min.toFixed(2)}\nMax: ${max === -Infinity ? 0 : max.toFixed(2)}`;
+}
+
 function loadQTableFromFile(file) {
   const reader = new FileReader();
   reader.onload = e => {
@@ -31,6 +51,7 @@ function loadQTableFromFile(file) {
       if (qDisplay) {
         qDisplay.textContent = JSON.stringify(qTable, null, 2);
       }
+      updateQTableInfo();
     } catch (err) {
       console.error('Erro ao carregar Q-Table', err);
       alert('Arquivo de Q-Table inválido');
@@ -136,6 +157,7 @@ function updateQ(states, reward) {
     qTable[state][action] += alpha * (reward + gamma * nextMax - qTable[state][action]);
     reward *= gamma;
   }
+  updateQTableInfo();
 }
 
 function delay(ms) { return new Promise(res => setTimeout(res, ms)); }
