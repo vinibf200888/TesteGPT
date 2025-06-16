@@ -24,20 +24,49 @@ let soundEnabled = true;
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioCtx();
 
-function playTone(freq, duration) {
+function playTone(freq, duration, start = audioCtx.currentTime) {
   if (!soundEnabled) return;
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
   osc.frequency.value = freq;
   osc.connect(gain);
   gain.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + duration / 1000);
+  osc.start(start);
+  osc.stop(start + duration / 1000);
 }
 
-function playWin() { playTone(880, 200); }
-function playLose() { playTone(220, 200); }
-function playDraw() { playTone(440, 200); }
+function playTune(notes) {
+  if (!soundEnabled) return;
+  let time = audioCtx.currentTime;
+  notes.forEach(([f, d]) => {
+    playTone(f, d, time);
+    time += d / 1000;
+  });
+}
+
+function playWin() {
+  playTune([
+    [660, 150],
+    [880, 150],
+    [1047, 300]
+  ]);
+}
+
+function playLose() {
+  playTune([
+    [440, 200],
+    [330, 200],
+    [220, 300]
+  ]);
+}
+
+function playDraw() {
+  playTune([
+    [520, 150],
+    [440, 150],
+    [520, 150]
+  ]);
+}
 function playClick() { playTone(660, 100); }
 
 let board;
