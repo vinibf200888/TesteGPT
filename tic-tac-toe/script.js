@@ -84,22 +84,27 @@ function updateQTableInfo() {
 }
 
 function loadQTableFromFile(file) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = JSON.parse(e.target.result);
-      Object.assign(qTable, data);
-      const qDisplay = document.getElementById('qtable-display');
-      if (qDisplay) {
-        qDisplay.textContent = JSON.stringify(qTable, null, 2);
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        Object.assign(qTable, data);
+        const qDisplay = document.getElementById('qtable-display');
+        if (qDisplay) {
+          qDisplay.textContent = JSON.stringify(qTable, null, 2);
+        }
+        updateQTableInfo();
+        resolve();
+      } catch (err) {
+        console.error('Erro ao carregar Q-Table', err);
+        alert('Arquivo de Q-Table inválido');
+        reject(err);
       }
-      updateQTableInfo();
-    } catch (err) {
-      console.error('Erro ao carregar Q-Table', err);
-      alert('Arquivo de Q-Table inválido');
-    }
-  };
-  reader.readAsText(file);
+    };
+    reader.onerror = err => reject(err);
+    reader.readAsText(file);
+  });
 }
 
 function exportQTable() {
@@ -391,10 +396,15 @@ playAiBtn.addEventListener('click', () => {
     fileInput.value = '';
     const handler = () => {
       if (fileInput.files.length > 0) {
-        loadQTableFromFile(fileInput.files[0]);
-        humanPlaying = true;
-        playAiBtn.textContent = 'Sair do Jogo';
-        startHumanGame();
+        loadQTableFromFile(fileInput.files[0])
+          .then(() => {
+            humanPlaying = true;
+            playAiBtn.textContent = 'Sair do Jogo';
+            startHumanGame();
+          })
+          .catch(() => {
+            alert('Falha ao carregar Q-Table');
+          });
       }
       fileInput.removeEventListener('change', handler);
     };
