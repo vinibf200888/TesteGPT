@@ -1,10 +1,18 @@
-# Portal de Notícias
+# Simple News Scraper App
 
-Este projeto é um site de notícias com estilo inspirado na página principal da Globo.com. O layout utiliza grid responsivo e cores para diferenciar as seções.
+This application allows you to input the URL of a news website and scrape the headlines.
+It is a minimal Flask app.
 
-## Estrutura
-- **index.html**: marcação principal do site.
-- **styles.css**: estilos e responsividade.
-- **script.js**: pequeno script para abrir e fechar o menu em telas menores.
+## Setup
 
-Abra o `index.html` em seu navegador para visualizar o portal.
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Run the app:
+   ```bash
+   python app.py
+   ```
+3. Open your browser at `http://localhost:5000` and enter the URL of a news site.
+
+The scraped news titles will be displayed after clicking "Iniciar".
