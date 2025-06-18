@@ -64,8 +64,9 @@ function detectIndex(landmarks) {
   const middleUp = landmarks[12].y < landmarks[10].y;
   const ringUp = landmarks[16].y < landmarks[14].y;
   const pinkyUp = landmarks[20].y < landmarks[18].y;
+  const thumbUp = landmarks[4].y < landmarks[2].y;
 
-  if (indexUp && !middleUp && !ringUp && !pinkyUp) {
+  if (indexUp && !middleUp && !ringUp && !pinkyUp && !thumbUp) {
     if (!indexPose) {
       count++;
       countElement.textContent = count.toString();
