@@ -1,22 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webcam Viewer</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Notícias</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Webcam Viewer</h1>
-  <button id="start">Open Webcam</button>
-  <div id="counter">Counter: <span id="count">0</span></div>
-  <div id="viewer">
-    <video id="video" class="input_video" autoplay playsinline></video>
-    <canvas id="output" class="output_canvas" width="640" height="480"></canvas>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-  <script src="script.js"></script>
+
+<header>
+    <div class="topbar">
+        <span id="menu-toggle">Menu</span>
+        <nav id="main-nav">
+            <a href="#">g1</a>
+            <a href="#">o globo</a>
+            <a href="#">valor</a>
+            <a href="#">ge</a>
+            <a href="#">cartola</a>
+            <a href="#">globoplay</a>
+            <a href="#">gshow</a>
+            <a href="#">receitas</a>
+            <a href="#">quem</a>
+            <a href="#">podcast</a>
+        </nav>
+        <div class="logo">globo.com</div>
+    </div>
+</header>
+
+<main class="content">
+
+    <section class="main-headline">
+        <h1>Banco Central eleva Selic para 15% ao ano; maior patamar desde 2006</h1>
+        <ul>
+            <li>Quanto rende R$ 1 mil em Tesouro Direto, poupança e CDB após nova alta</li>
+            <li>Confira a trajetória da taxa básica de juros até o novo aumento</li>
+            <li>Brasil sobe para 2º no ranking de maiores juros reais do mundo; veja lista</li>
+        </ul>
+    </section>
+
+    <section class="side-news">
+        <article class="green">
+            <p>Real perde pênalti no fim e empata com o Al-Hilal na Copa</p>
+        </article>
+        <article class="red">
+            <p>PF prende Marcelo Câmara, ex-assessor de Bolsonaro</p>
+        </article>
+        <article class="orange">
+            <p>Renato e Solange transam em 'Vale', mas têm DR: 'Não penso em namorar'</p>
+        </article>
+        <article class="green">
+            <p>Fifa considerou Palmeiras e Flu campeões mundiais?</p>
+        </article>
+    </section>
+
+</main>
+
+<script src="script.js"></script>
 </body>
 </html>
