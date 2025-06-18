@@ -14,3 +14,17 @@ canvas {
   border: 1px solid #333;
 }
 
+#viewer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+#viewer video,
+#viewer canvas {
+  margin-top: 20px;
+  width: 48%;
+  max-width: 480px;
+}
+
