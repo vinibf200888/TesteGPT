@@ -6,6 +6,7 @@ const countElement = document.getElementById('count');
 
 let count = 0;
 let indexPose = false;
+let indexLowered = false;
 
 button.addEventListener('click', async () => {
   try {
@@ -66,13 +67,19 @@ function detectIndex(landmarks) {
   const pinkyUp = landmarks[20].y < landmarks[18].y;
   const thumbUp = landmarks[4].y < landmarks[2].y;
 
-  if (indexUp && !middleUp && !ringUp && !pinkyUp && !thumbUp) {
-    if (!indexPose) {
+  const indexOnlyUp = indexUp && !middleUp && !ringUp && !pinkyUp && !thumbUp;
+
+  if (indexOnlyUp) {
+    if (indexLowered) {
       count++;
       countElement.textContent = count.toString();
-      indexPose = true;
+      indexLowered = false;
     }
+    indexPose = true;
   } else {
+    if (indexPose) {
+      indexLowered = true;
+    }
     indexPose = false;
   }
 }
