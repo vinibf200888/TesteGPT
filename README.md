@@ -1,6 +1,10 @@
-# Webcam Viewer
+# Portal de Notícias
 
-This is a simple web application that opens your webcam directly in the browser using the `getUserMedia` API. Click the **Open Webcam** button to grant access and start the video stream.
+Este projeto é um site de notícias com estilo inspirado na página principal da Globo.com. O layout utiliza grid responsivo e cores para diferenciar as seções.
 
-After granting access, the page uses MediaPipe Hands to detect hand landmarks. The counter increases every time the index finger is lowered and then raised again while the other fingers remain folded.
+## Estrutura
+- **index.html**: marcação principal do site.
+- **styles.css**: estilos e responsividade.
+- **script.js**: pequeno script para abrir e fechar o menu em telas menores.
 
+Abra o `index.html` em seu navegador para visualizar o portal.
