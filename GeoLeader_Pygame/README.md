@@ -6,7 +6,9 @@ Este projeto implementa um jogo 2D de geopolítica criado com Python e Pygame. O
 - `main.py` inicia o jogo e configura o loop principal.
 - `config.py` armazena configurações globais.
 - `src/` contém os módulos de lógica de jogo.
-- `assets/` possui imagens, sons e fontes usados na interface.
+- `assets/` possui imagens, sons e fontes usados na interface. Este repositório
+  **não** inclui o arquivo `assets/images/world_map.png`. Adicione sua própria
+  imagem ou o jogo exibirá um mapa genérico em tons de cinza.
 - `data/` guarda informações sobre países e estados iniciais.
 - `saves/` receberá arquivos de progresso.
 
