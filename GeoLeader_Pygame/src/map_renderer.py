@@ -7,7 +7,7 @@ class MapRenderer:
         self.game_state = game_state
         try:
             self.map_image = pygame.image.load(MAP_IMAGE)
-        except pygame.error:
+        except (pygame.error, FileNotFoundError):
             self.map_image = pygame.Surface((800, 400))
             self.map_image.fill((30, 30, 30))
 
