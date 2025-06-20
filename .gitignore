@@ -1,1 +1,3 @@
-GeoLeader_Cpp/build/
+__pycache__/
+*.pyc
+saves/
