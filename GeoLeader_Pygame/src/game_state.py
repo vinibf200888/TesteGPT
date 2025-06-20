@@ -4,9 +4,14 @@ class GameState:
     def __init__(self):
         self.month = 1
         self.year = 2023
-        self.treasury = 2.65  # Trilhões
-        self.economy_health = 100
-        self.congress_approval = 50
+
+        # Indicadores econômicos
+        self.gdp = 2.65  # PIB em trilhões
+        self.inflation = 5.0  # Percentual
+
+        # Indicadores políticos
+        self.popularity = 50  # Popularidade do presidente
+        self.congress_approval = 50  # Aprovação no congresso
 
     def advance_time(self):
         self.month += 1

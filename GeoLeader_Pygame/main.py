@@ -3,6 +3,7 @@ from config import WINDOW_WIDTH, WINDOW_HEIGHT, FPS
 from src.game_state import GameState
 from src.map_renderer import MapRenderer
 from src.ui import UI
+from src import events
 
 
 def main():
@@ -20,6 +21,9 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                game_state.advance_time()
+                events.check_monthly_events(game_state, ui)
             ui.handle_event(event)
 
         game_state.update()

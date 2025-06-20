@@ -23,10 +23,54 @@ class Button:
                 self.callback()
 
 
+class Popup:
+    """Simple modal popup with two buttons."""
+
+    def __init__(self, text, on_view, on_dismiss):
+        self.text = text
+        self.on_view = on_view
+        self.on_dismiss = on_dismiss
+        self.font = pygame.font.SysFont('arial', 18)
+
+        width, height = 400, 180
+        self.rect = pygame.Rect(
+            (WINDOW_WIDTH - width) // 2,
+            150,
+            width,
+            height,
+        )
+
+        self.view_button = Button(
+            (self.rect.left + 40, self.rect.bottom - 50, 100, 30),
+            "VIEW",
+            self.on_view,
+        )
+        self.dismiss_button = Button(
+            (self.rect.right - 140, self.rect.bottom - 50, 100, 30),
+            "DISMISS",
+            self.on_dismiss,
+        )
+
+    def handle_event(self, event):
+        self.view_button.handle_event(event)
+        self.dismiss_button.handle_event(event)
+
+    def draw(self, surface):
+        pygame.draw.rect(surface, (30, 30, 30), self.rect)
+        pygame.draw.rect(surface, (200, 200, 200), self.rect, 2)
+        rendered = self.font.render(self.text, True, (255, 255, 255))
+        text_rect = rendered.get_rect(center=(self.rect.centerx, self.rect.top + 40))
+        surface.blit(rendered, text_rect)
+        self.view_button.draw(surface)
+        self.dismiss_button.draw(surface)
+
+
 class UI:
     def __init__(self, game_state):
         self.game_state = game_state
         self.font = pygame.font.SysFont('arial', 18)
+
+        self.popup = None
 
         # Left side menu buttons
         self.buttons = []
@@ -53,6 +97,10 @@ class UI:
             )
 
     def handle_event(self, event):
+        if self.popup:
+            self.popup.handle_event(event)
+            return
+
         for btn in self.buttons:
             btn.handle_event(event)
 
@@ -75,9 +123,10 @@ class UI:
                      f"{self.game_state.year}"
         text = (
             f"{month_year}  "
-            f"{self.game_state.treasury:.2f}T  "
-            f"{self.game_state.economy_health}%  "
-            f"{self.game_state.congress_approval}%"
+            f"PIB:{self.game_state.gdp:.2f}T  "
+            f"Inf:{self.game_state.inflation:.1f}%  "
+            f"Pop:{self.game_state.popularity}%  "
+            f"Cong:{self.game_state.congress_approval}%"
         )
         rendered = self.font.render(text, True, (255, 255, 255))
         pygame.draw.rect(surface, (20, 20, 20), (0, 0, WINDOW_WIDTH, 30))
@@ -85,3 +134,16 @@ class UI:
 
         for btn in self.buttons:
             btn.draw(surface)
+
+        if self.popup:
+            self.popup.draw(surface)
+
+    def show_popup(self, text, on_view=None, on_dismiss=None):
+        def view_wrapper():
+            if on_view:
+                on_view()
+        def dismiss_wrapper():
+            if on_dismiss:
+                on_dismiss()
+            self.popup = None
+        self.popup = Popup(text, view_wrapper, dismiss_wrapper)
